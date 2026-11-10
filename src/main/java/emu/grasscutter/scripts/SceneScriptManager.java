@@ -509,6 +509,9 @@ public class SceneScriptManager {
 
     // TODO optimize
     public SceneGroup getGroupById(int groupId) {
+        // Check already-loaded groups first to avoid re-entering block loading.
+        var loaded = this.sceneGroups.get(groupId);
+        if (loaded != null) return loaded;
         for (var block : getBlocks().values()) {
             this.getScene().loadBlock(block);
             if (block.groups == null) continue;

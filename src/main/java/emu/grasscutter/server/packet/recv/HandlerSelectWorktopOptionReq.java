@@ -18,7 +18,8 @@ public class HandlerSelectWorktopOptionReq extends PacketHandler {
         SelectWorktopOptionReq req = SelectWorktopOptionReq.parseFrom(payload);
 
         try {
-            GameEntity entity = session.getPlayer().getScene().getEntityById(req.getGadgetEntityId());
+            var scene = session.getPlayer().getScene();
+            GameEntity entity = scene.getEntityById(req.getGadgetEntityId());
 
             if (!(entity instanceof EntityGadget)) {
                 return;
@@ -37,10 +38,8 @@ public class HandlerSelectWorktopOptionReq extends PacketHandler {
                 return;
             }
 
-            session.getPlayer().getScene().selectWorktopOptionWith(req);
-            session
-                    .getPlayer()
-                    .getScene()
+            scene.selectWorktopOptionWith(req);
+            scene
                     .getScriptManager()
                     .callEvent(
                             new ScriptArgs(
@@ -54,8 +53,7 @@ public class HandlerSelectWorktopOptionReq extends PacketHandler {
                     .queueEvent(
                             QuestContent.QUEST_CONTENT_WORKTOP_SELECT, entity.getConfigId(), req.getOptionId());
 
-            MissingDomainFallbackManager.handleSelectWorktopOption(
-                    session.getPlayer().getScene(), entity, req.getOptionId());
+            MissingDomainFallbackManager.handleSelectWorktopOption(scene, entity, req.getOptionId());
 
             // Secret-realm entrance: the option enters the domain. This is the private-server F fallback;
             // officially it goes through the activity page EnterReq.
