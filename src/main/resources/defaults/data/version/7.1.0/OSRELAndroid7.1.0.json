@@ -1,0 +1,32 @@
+{
+  "RegionInfo": {
+    "ClientDataMd5": "{\"remoteName\": \"data_versions\", \"md5\": \"fe1421dbbc78bf6092705f8e2f1ef5e3\", \"hash\": \"67d3fef07e68ada9\", \"fileSize\": 71416}\r\n{\"remoteName\": \"data_versions_medium\", \"md5\": \"5f495a690d7e4c53d29d1cfa870c6f6c\", \"hash\": \"1eccde5839d853d2\", \"fileSize\": 7002}",
+    "ResourceUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "NextResourceUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "ResourceUrlBak": "7.1_live",
+    "DataUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "NextResVersionConfig": {
+      "Md5": "0",
+      "ReleaseTotalSize": "0",
+      "Branch": "7.1_live"
+    },
+    "ResVersionConfig": {
+      "Version": 48652077,
+      "Md5": "{\"remoteName\": \"res_versions_external\", \"md5\": \"87fb8ab4760f99e2db24b9b2a611da80\", \"hash\": \"9d87c75b7b5ae3b7\", \"fileSize\": 247878}\r\n{\"remoteName\": \"res_versions_medium\", \"md5\": \"ee7321c914fb41f2604e3de7a9fa1ab2\", \"hash\": \"383ea363def5a97e\", \"fileSize\": 13193}\r\n{\"remoteName\": \"base_revision\", \"md5\": \"3b62a832206049ad41798cc7b0dc0d4e\", \"hash\": \"2190a4ad194760a9\", \"fileSize\": 19}",
+      "ReleaseTotalSize": "0",
+      "VersionSuffix": "c12211e3c4",
+      "Branch": "7.1_live"
+    },
+    "GameBiz": "hk4e_global",
+    "AreaType": "OS",
+    "ClientDataVersion": 48538394,
+    "ClientSilenceDataVersion": 48511369,
+    "ClientVersionSuffix": "c12211e3c4",
+    "ClientSilenceVersionSuffix": "8e1e69978a",
+    "UseGateserverDomainName": false,
+    "GateserverIp": "192.168.2.4",
+    "GateserverPort": 22101,
+    "PrivacyPolicyUrl": "https://user.mihoyo.com/#/about/privacyInGame?app_id=4&lang=zh-cn&biz=hk4e_global"
+  },
+  "Retcode": 0
+}
