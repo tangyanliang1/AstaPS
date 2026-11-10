@@ -50,6 +50,14 @@ public final class PartyReviveHelper {
 
     private PartyReviveHelper() {}
 
+    /**
+     * Force-revive all fallen party members to the given HP ratio.
+     * Used by the RL environment bridge's reset/revive actions.
+     */
+    public static int reviveAll(Player player, float ratio) {
+        return reviveFallen(player, ratio > 0.01f ? ratio : 1.0f, null, "EnvRevive");
+    }
+
     public static void clearPlayerState(Player player) {
         if (player == null) return;
         QIQI_CD_UNTIL.remove(player.getUid());

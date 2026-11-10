@@ -15,5 +15,8 @@ public final class ApiHandler implements Router {
         // /status/server is not registered here: GenericHandler already serves it, in the same
         // shape, and Javalin throws on a second handler for the same method and path - which
         // aborts the whole router registration, not just this route.
+
+        // Gym/RL environment bridge: local-only WebSocket observation endpoint.
+        EnvironmentWebSocketHandler.configure(javalin);
     }
 }

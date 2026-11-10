@@ -102,6 +102,14 @@ public class Player implements PlayerHook, FieldFetch {
     @Getter private Map<Integer, Integer> properties;
     @Getter @Setter private int currentRealmId;
     @Getter @Setter private transient boolean isInEditMode;
+
+    // RL skill-probe: set by HandlerEvtDoSkillSuccNotify for the environment bridge.
+    @Getter @Setter private transient int lastSkillId;
+    @Getter @Setter private transient int lastSkillCasterId;
+    @Getter @Setter private transient String lastSkillKind = "other";
+    @Getter @Setter private transient long lastSkillTimeMs;
+    @Getter @Setter private transient boolean lastSkillSelf;
+
     @Getter @Setter private int widgetId;
     @Getter @Setter private int sceneId;
     @Getter @Setter private int regionId;
