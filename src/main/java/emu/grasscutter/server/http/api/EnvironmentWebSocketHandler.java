@@ -163,6 +163,13 @@ public final class EnvironmentWebSocketHandler {
         result.put("hp", avatar.getFightProperty(FightProperty.FIGHT_PROP_CUR_HP));
         result.put("maxHp", avatar.getFightProperty(FightProperty.FIGHT_PROP_MAX_HP));
         result.put("lifeState", avatar.getLifeState().name());
+        // Stamina: server stores in units of 100 (e.g. 24000 = 240 stamina).
+        // Divide by 100 to give the runner the conventional display value.
+        var staminaMgr = player.getStaminaManager();
+        if (staminaMgr != null) {
+            result.put("stamina", staminaMgr.getCurrentCharacterStamina() / 100.0f);
+            result.put("maxStamina", staminaMgr.getMaxCharacterStamina() / 100.0f);
+        }
         MotionState motionState = avatar.getMotionState();
         if (motionState != null) {
             result.put("motionState", motionState.name());
