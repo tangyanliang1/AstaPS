@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.entity.EntityAvatar;
 import emu.grasscutter.game.entity.EntityGadget;
+import emu.grasscutter.game.entity.EntityMonster;
 import emu.grasscutter.game.entity.GameEntity;
 import emu.grasscutter.game.inventory.GameItem;
 import emu.grasscutter.game.inventory.ItemType;
@@ -170,6 +171,53 @@ public final class EnvironmentWebSocketHandler {
             result.put("stamina", staminaMgr.getCurrentCharacterStamina() / 100.0f);
             result.put("maxStamina", staminaMgr.getMaxCharacterStamina() / 100.0f);
         }
+        // Energy for the current avatar's element bar (handles Natlan special-energy bars too).
+        try {
+            var av = avatar.getAvatar();
+            var curProp = avatar.GetEnergyProp(av);
+            float curEnergy = avatar.getFightProperty(curProp);
+            var maxProp = curProp == FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY
+                    ? FightProperty.FIGHT_PROP_MAX_SPECIAL_ENERGY
+                    : av.getSkillDepot().getElementType().getMaxEnergyProp();
+            float maxEnergy = avatar.getFightProperty(maxProp);
+            result.put("energy", curEnergy);
+            result.put("maxEnergy", maxEnergy);
+        } catch (Throwable ignored) {
+        }
+        // Combat state flags.
+        result.put("isInvincible", avatar.isModifierInvincible());
+        result.put("isLockHp", avatar.isLockHP());
+        result.put("shieldPool", avatar.getShieldPool());
+        // Team state: per-member HP ratio, energy, alive, avatarId, plus current slot.
+        var teamList = new java.util.ArrayList<Map<String, Object>>();
+        var tm = player.getTeamManager();
+        int curIdx = tm.getCurrentCharacterIndex();
+        for (int i = 0; i < tm.getActiveTeam().size(); i++) {
+            var member = tm.getActiveTeam().get(i);
+            if (member == null || member.getAvatar() == null) continue;
+            var row = new java.util.LinkedHashMap<String, Object>();
+            row.put("index", i);
+            row.put("current", i == curIdx);
+            row.put("avatarId", member.getAvatar().getAvatarId());
+            row.put("alive", member.isAlive());
+            float mHp = member.getFightProperty(FightProperty.FIGHT_PROP_CUR_HP);
+            float mMax = member.getFightProperty(FightProperty.FIGHT_PROP_MAX_HP);
+            row.put("hp", mHp);
+            row.put("maxHp", mMax);
+            row.put("hpRatio", mMax > 0 ? mHp / mMax : 0.0f);
+            try {
+                var curProp = member.GetEnergyProp(member.getAvatar());
+                row.put("energy", member.getFightProperty(curProp));
+                var maxProp = curProp == FightProperty.FIGHT_PROP_CUR_SPECIAL_ENERGY
+                        ? FightProperty.FIGHT_PROP_MAX_SPECIAL_ENERGY
+                        : member.getAvatar().getSkillDepot().getElementType().getMaxEnergyProp();
+                row.put("maxEnergy", member.getFightProperty(maxProp));
+            } catch (Throwable ignored) {
+            }
+            teamList.add(row);
+        }
+        result.put("team", teamList);
+        result.put("currentTeamIndex", curIdx);
         MotionState motionState = avatar.getMotionState();
         if (motionState != null) {
             result.put("motionState", motionState.name());
@@ -194,21 +242,38 @@ public final class EnvironmentWebSocketHandler {
         Position origin = player.getPosition();
         if (scene == null) return items;
         for (GameEntity entity : scene.getEntities().values()) {
-            if (!(entity instanceof EntityGadget gadget)) continue;
-            Position pos = gadget.getPosition();
+            Position pos = entity.getPosition();
+            if (pos == null) continue;
             double distance = Math.sqrt(
                     Math.pow(pos.getX() - origin.getX(), 2)
                     + Math.pow(pos.getY() - origin.getY(), 2)
                     + Math.pow(pos.getZ() - origin.getZ(), 2));
             if (distance > radius) continue;
             var row = new java.util.LinkedHashMap<String, Object>();
-            row.put("entityId", gadget.getId());
-            row.put("gadgetId", gadget.getGadgetId());
-            var data = gadget.getGadgetData();
-            if (data != null) {
-                row.put("type", data.getType() == null ? "" : data.getType().name());
-                row.put("jsonName", data.getJsonName());
-                row.put("itemJsonName", data.getItemJsonName());
+            if (entity instanceof EntityGadget gadget) {
+                row.put("entityType", "gadget");
+                row.put("entityId", gadget.getId());
+                row.put("gadgetId", gadget.getGadgetId());
+                var data = gadget.getGadgetData();
+                if (data != null) {
+                    row.put("type", data.getType() == null ? "" : data.getType().name());
+                    row.put("jsonName", data.getJsonName());
+                    row.put("itemJsonName", data.getItemJsonName());
+                }
+            } else if (entity instanceof EntityMonster monster) {
+                row.put("entityType", "monster");
+                row.put("entityId", monster.getId());
+                row.put("monsterId", monster.getMonsterData().getId());
+                row.put("monsterType", monster.getMonsterData().getType().name());
+                row.put("level", monster.getLevel());
+                row.put("alive", monster.isAlive());
+                float mHp = monster.getFightProperty(FightProperty.FIGHT_PROP_CUR_HP);
+                float mMax = monster.getFightProperty(FightProperty.FIGHT_PROP_MAX_HP);
+                row.put("hp", mHp);
+                row.put("maxHp", mMax);
+                row.put("hpRatio", mMax > 0 ? mHp / mMax : 0.0f);
+            } else {
+                continue; // skip items, NPCs, avatar entities
             }
             row.put("x", pos.getX());
             row.put("y", pos.getY());
