@@ -25,7 +25,7 @@
     "ClientSilenceVersionSuffix": "8e1e69978a",
     "UseGateserverDomainName": false,
     "GateserverIp": "192.168.2.4",
-    "GateserverPort": 22101,
+    "GateserverPort": 22102,
     "PrivacyPolicyUrl": "https://user.mihoyo.com/#/about/privacyInGame?app_id=4&lang=zh-cn&biz=hk4e_global"
   },
   "Retcode": 0
