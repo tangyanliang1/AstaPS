@@ -3,10 +3,13 @@ package emu.grasscutter.server.http.api;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import emu.grasscutter.Grasscutter;
+import emu.grasscutter.data.GameData;
 import emu.grasscutter.game.entity.EntityAvatar;
 import emu.grasscutter.game.entity.EntityGadget;
 import emu.grasscutter.game.entity.EntityMonster;
 import emu.grasscutter.game.entity.GameEntity;
+import emu.grasscutter.game.entity.gadget.GadgetGatherObject;
+import emu.grasscutter.game.entity.gadget.GadgetGatherPoint;
 import emu.grasscutter.game.inventory.GameItem;
 import emu.grasscutter.game.inventory.ItemType;
 import emu.grasscutter.game.player.Player;
@@ -14,6 +17,7 @@ import emu.grasscutter.game.props.FightProperty;
 import emu.grasscutter.game.world.Position;
 import emu.grasscutter.net.proto.MotionStateOuterClass.MotionState;
 import emu.grasscutter.utils.JsonUtils;
+import emu.grasscutter.utils.lang.Language;
 import io.javalin.Javalin;
 import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
@@ -259,6 +263,25 @@ public final class EnvironmentWebSocketHandler {
                     row.put("type", data.getType() == null ? "" : data.getType().name());
                     row.put("jsonName", data.getJsonName());
                     row.put("itemJsonName", data.getItemJsonName());
+                    // Gadget display name from textmap.
+                    var gadgetName = resolveTextMapName(data.getNameTextMapHash());
+                    if (gadgetName != null) row.put("name", gadgetName);
+                }
+                // Gather object: expose item id and item display name.
+                var content = gadget.getContent();
+                int gatherItemId = 0;
+                if (content instanceof GadgetGatherObject go) {
+                    gatherItemId = go.getItemId();
+                } else if (content instanceof GadgetGatherPoint gp) {
+                    gatherItemId = gp.getItemId();
+                }
+                if (gatherItemId > 0) {
+                    row.put("itemId", gatherItemId);
+                    var itemData = GameData.getItemDataMap().get(gatherItemId);
+                    if (itemData != null) {
+                        var itemName = resolveTextMapName(itemData.getNameTextMapHash());
+                        if (itemName != null) row.put("itemName", itemName);
+                    }
                 }
             } else if (entity instanceof EntityMonster monster) {
                 row.put("entityType", "monster");
@@ -284,6 +307,28 @@ public final class EnvironmentWebSocketHandler {
         items.sort(java.util.Comparator.comparingDouble(
                 row -> ((Number) row.get("distance")).doubleValue()));
         return items;
+    }
+
+    /** Resolve a textmap hash to the EN display name, or null if unknown. */
+    private static String resolveTextMapName(long hash) {
+        if (hash <= 0) return null;
+        try {
+            var ts = Language.getTextMapKey(hash);
+            if (ts == null || ts.strings == null || ts.strings.length == 0) return null;
+            // Index 0 = "EN"; fall back to first non-null entry.
+            String name = ts.strings[0];
+            if (name == null || name.isBlank()) {
+                for (var s : ts.strings) {
+                    if (s != null && !s.isBlank()) {
+                        name = s;
+                        break;
+                    }
+                }
+            }
+            return name == null || name.isBlank() ? null : name;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     /** Active team members, used by switch_avatar / GM automation. */
