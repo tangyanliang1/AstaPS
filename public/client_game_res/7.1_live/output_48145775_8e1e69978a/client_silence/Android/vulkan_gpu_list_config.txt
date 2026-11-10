@@ -1,0 +1,31 @@
+7
+Samsung Xclipse 950
+Samsung Xclipse 940
+Samsung Xclipse 920
+Adreno (TM) 840
+Adreno (TM) 830
+Adreno (TM) 825
+Adreno (TM) 750
+Adreno (TM) 740
+Adreno (TM) 735
+Adreno (TM) 730
+Mali-G710
+Mali-G715
+Mali-G720
+Mali-G925
+Mali-G1-Ultra MC12
+Mali-G1-Ultra MC11
+Adreno (TM) 829
+Samsung Xclipse 960
+Adreno (TM) 810
+Adreno (TM) 732
+Adreno (TM) 725
+Adreno (TM) 720
+Mali-G615 MC6
+Mali-G610 MC6
+Adreno (TM) 722
+Mali-G2-Ultra-NX MC12
+Mali-G2-Ultra-NX MC16
+Mali-TMAX-Immortalis MC16
+Adreno (TM) 850
+Adreno (TM) 845
