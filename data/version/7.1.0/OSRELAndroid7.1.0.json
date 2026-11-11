@@ -1,0 +1,29 @@
+{
+  "RegionInfo": {
+    "ClientDataMd5": "{\"remoteName\": \"data_versions\", \"md5\": \"fe1421dbbc78bf6092705f8e2f1ef5e3\", \"fileSize\": 71416}",
+    "ClientSilenceDataMd5": "",
+    "ResourceUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "NextResourceUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "ResourceUrlBak": "7.1_live",
+    "DataUrl": "http://192.168.2.4:8080/client_game_res/7.1_live",
+    "NextResVersionConfig": {"Branch": "7.1_live", "Md5": "0", "ReleaseTotalSize": "0", "Relogin": false, "Version": 0},
+    "ResVersionConfig": {
+      "Branch": "7.1_live",
+      "VersionSuffix": "c12211e3c4",
+      "Version": 48145775,
+      "ReleaseTotalSize": "10000",
+      "Relogin": false,
+      "Md5": "{\"remoteName\": \"res_versions_external\", \"md5\": \"061fca8f52685ba5391c1f497a56c7c6\", \"fileSize\": 200724}"
+    },
+    "GameBiz": "hk4e_global",
+    "AreaType": "OVERSEAS",
+    "ClientDataVersion": 48145775,
+    "ClientSilenceDataVersion": 48145775,
+    "ClientVersionSuffix": "c12211e3c4",
+    "ClientSilenceVersionSuffix": "8e1e69978a",
+    "UseGateserverDomainName": false,
+    "GateserverIp": "192.168.2.4",
+    "GateserverPort": 22101
+  },
+  "Retcode": 0
+}

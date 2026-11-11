@@ -154,6 +154,26 @@ public class ConfigContainer {
 
         public Dispatch dispatch = new Dispatch();
         public DebugMode debugMode = new DebugMode();
+        public ResourceServer resourceServer = new ResourceServer();
+    }
+
+    /**
+     * Static file server for client resource downloads (client_game_res / client_design_data).
+     *
+     * <p>Replaces the external {@code python -m http.server 8080 --directory public} step. Runs on
+     * its own plaintext port because the client fetches resources over HTTP, while the dispatch
+     * server ({@link HTTP}) uses TLS and SSL redirects that would break those requests. The
+     * {@code ResourceUrl} in each {@code data/version/*} region config must point at this port.
+     */
+    public static class ResourceServer {
+        /** When disabled, run the external resource host yourself (the legacy behavior). */
+        public boolean enabled = false;
+
+        public String bindAddress = "0.0.0.0";
+        public int bindPort = 8080;
+
+        /** Directory served at the URL root, relative to the server working directory. */
+        public String directory = "./public";
     }
 
     /** Automated maintenance checks. See ServerWatchdog. */

@@ -69,6 +69,7 @@ public final class Grasscutter {
     @Setter private static boolean noConsole = false;
 
     @Getter private static HttpServer httpServer;
+    @Getter private static emu.grasscutter.server.http.ResourceServer resourceServer;
     @Getter private static GameServer gameServer;
     @Getter private static DispatchServer dispatchServer;
     @Getter private static PluginManager pluginManager;
@@ -273,6 +274,10 @@ public final class Grasscutter {
     /** Utility method for starting the: - SDK server - Dispatch server */
     public static void startDispatch() throws Exception {
         httpServer.start(); // Start the SDK/HTTP server.
+
+        // Start the plaintext resource server (replaces the external python http.server on 8080).
+        resourceServer = new emu.grasscutter.server.http.ResourceServer();
+        resourceServer.start();
 
         if (Grasscutter.getRunMode() == ServerRunMode.DISPATCH_ONLY) {
             dispatchServer = new DispatchServer("0.0.0.0", 1111); // Create the dispatch server.
